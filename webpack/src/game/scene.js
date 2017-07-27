@@ -8,7 +8,7 @@ import sceneStart from 'start/scene';
 
 export default function sceneGame() {
     $('body').html('');
-    let str = `<h4>场景 start</h4>
+    let str = `<h4>场景 game</h4>
     <div>yxb: <span id="yxb"></span></div>
     <input id="switch" type="button" value="切换场景 game" />`;
     $('body').append(str);
