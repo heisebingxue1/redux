@@ -14,6 +14,8 @@
   <p>
     <input type="button" id='btn1' value='加' />
     <input type="button" id='btn2' value='减' />
+
+    <input type="button" id='btn3' value='减(延迟)' />
   </p>
   <script>
     /** Action Creators */
@@ -27,6 +29,14 @@
       return {
         type: 'DECREMENT'
       };
+    }
+
+    function dec_delay() {
+      return function (dispatch) {
+        setTimeout(() => {
+          dispatch(dec());
+        }, 1000);
+      }
     }
 
     let initState = Immutable.Map({
@@ -47,7 +57,21 @@
       }
     }
 
-    var store = Redux.createStore(reducer);
+    const thunk = ({
+      dispatch,
+      getState
+    }) => next => action => {
+      if (typeof action === 'function') {
+        return action(dispatch, getState);
+      }
+
+      return next(action);
+    };
+
+    var store = Redux.createStore(reducer, Redux.compose(
+      Redux.applyMiddleware(thunk),
+      window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : noop => noop,
+    ));
 
     store.subscribe(() => {
       var state = store.getState();
@@ -60,6 +84,10 @@
 
     $('#btn2').on('click', () => {
       store.dispatch(dec());
+    });
+
+    $('#btn3').on('click', () => {
+      store.dispatch(dec_delay());
     });
   </script>
 </body>

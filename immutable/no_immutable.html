@@ -56,7 +56,9 @@
       }
     }
 
-    var store = Redux.createStore(reducer);
+    var store = Redux.createStore(reducer, Redux.compose(
+      window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : noop => noop,
+    ));
 
     store.subscribe(() => {
       var state = store.getState();
