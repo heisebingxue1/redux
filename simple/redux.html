@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Redux</title>
+        <script type="text/javascript" src='js/redux.js'></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            function reducer(state, action) {
+              // 首次调用本函数时设置初始 state
+              state = state || { counter: 0 };
+
+              switch (action.type) {
+                case 'INCREMENT':
+                  console.log('reducer');
+                  return { counter: state.counter + 1 };
+                case 'DECREMENT':
+                  return { counter: state.counter - 1 };
+                default:
+                  return state; // 无论如何都返回一个 state
+              }
+            }
+
+            var rootReducer = Redux.combineReducers({
+              aaa: reducer
+            });
+
+            /*
+              第一次 createStore 里面会自动执行 dispatch, 再根据combieReducers 的源码,
+              会生成对象:
+              {
+                aaa: { counter: 0 }
+              }
+
+              然后会根据上一个的 state['aaa'] 传入到 reducer 里面, 最后会生成
+              {
+                aaa: {counter: 1}
+              }
+            */
+
+            var thunk = (middleApi) => (next) => (action) => {
+              if(typeof action == 'function'){
+                console.log(1);
+                return action(middleApi.dispatch, middleApi.getState);
+              }
+
+              console.log(2);
+              return next(action);
+            }
+
+            var inc = ()=> {
+              return {
+                type: 'INCREMENT'
+              }
+            }
+
+            var incAsy = () => (dispatch) => {
+              console.log('等待1秒');
+              setTimeout( ()=>{
+                dispatch( inc() );
+              }, 1000);
+            }
+            /*
+
+            */
+            var store = Redux.applyMiddleware(thunk)(Redux.createStore)(rootReducer);
+            // store.dispatch( incAsy() );
+
+        </script>
+    </body>
+</html>
