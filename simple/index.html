@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Redux</title>
+  <script src='js/zepto-1.1.6.js'></script>
+  <script type="text/javascript" src='js/redux.js'></script>
+</head>
+
+<body>
+  <span id="num"></span>
+  <p>
+    <input type="button" id='btn1' value='加' />
+    <input type="button" id='btn2' value='减' />
+  </p>
+  <script>
+    /** Action Creators */
+    function inc() {
+      return {
+        type: 'INCREMENT'
+      };
+    }
+
+    function dec() {
+      return {
+        type: 'DECREMENT'
+      };
+    }
+
+    let initState = {
+      counter: 0
+    }
+
+    function reducer(state = initState, action) {
+      switch (action.type) {
+        case 'INCREMENT':
+          let obj = {};
+          obj.counter = state.counter + 1;
+          return obj;
+        case 'DECREMENT':
+          let obj2 = {};
+          obj2.counter = state.counter - 1;
+          return obj2;
+        default:
+          return state;
+      }
+    }
+
+    var store = Redux.createStore(reducer);
+
+    store.subscribe(() => {
+      var state = store.getState();
+      $('#num').html(state.counter);
+    })
+
+    $('#btn1').on('click', () => {
+      store.dispatch(inc());
+    });
+
+    $('#btn2').on('click', () => {
+      store.dispatch(dec());
+    });
+  </script>
+</body>
+
+</html>

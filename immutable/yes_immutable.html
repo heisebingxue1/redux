@@ -6,6 +6,7 @@
   <title>Redux</title>
   <script src='js/zepto-1.1.6.js'></script>
   <script type="text/javascript" src='js/redux.js'></script>
+  <script type="text/javascript" src='js/immutable.js'></script>
 </head>
 
 <body>
@@ -28,20 +29,19 @@
       };
     }
 
-    let initState = {
-      counter: 0
-    }
+    let initState = Immutable.Map({
+      counter: 0,
+      a: {},
+      b: {},
+      d: {}
+    });
 
     function reducer(state = initState, action) {
       switch (action.type) {
         case 'INCREMENT':
-          return {
-            counter: state.counter + 1
-          };
+          return state.set('counter', state.get('counter') + 1);
         case 'DECREMENT':
-          return {
-            counter: state.counter - 1
-          };
+          return state.set('counter', state.get('counter') - 1);
         default:
           return state;
       }
@@ -51,7 +51,7 @@
 
     store.subscribe(() => {
       var state = store.getState();
-      $('#num').html(state.counter);
+      $('#num').html(state.get('counter'));
     })
 
     $('#btn1').on('click', () => {
